@@ -10,6 +10,7 @@ const catchProduct = () =>{
     productName.value='';
     productQuantity.value='';
     showProduct(product,quantity);
+    setItemsToLocalStorage(product,quantity);
 }
 
 const showProduct = (product,quantity) =>{
@@ -20,9 +21,29 @@ const showProduct = (product,quantity) =>{
 }
 
 const getItemsToLocalStorage = () =>{
-    
+    let cart ={};
+    const storedCart = localStorage.getItem("cart");
+    if(storedCart){
+        cart = JSON.parse(storedCart);
+    }
+    return cart;
 }
 
-const setItemsToLocalStorage = () =>{
-
+const setItemsToLocalStorage = (product,quantity) =>{
+    const cart = getItemsToLocalStorage();
+    cart[product] = quantity;
+    const cartStringified = JSON.stringify(cart);
+    window.localStorage.setItem('cart', cartStringified);
 }
+
+
+const displayProductsFromLocalStorage = () =>{
+    const savedCart = getItemsToLocalStorage();
+    for (const product in savedCart) {
+        if (Object.hasOwnProperty.call(savedCart, product)) {
+            const quantity = savedCart[product];
+            showProduct(product,quantity);
+        }
+    }
+}
+displayProductsFromLocalStorage();
